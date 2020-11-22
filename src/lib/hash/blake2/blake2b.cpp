@@ -32,14 +32,37 @@ const uint64_t blake2b_IV[BLAKE2B_IVU64COUNT] = {
 }
 
 BLAKE2b::BLAKE2b(size_t output_bits) :
+   BLAKE2b(nullptr, 0, output_bits)
+   {
+   }
+
+BLAKE2b::BLAKE2b(const SymmetricKey& key, size_t output_bits) :
+   BLAKE2b(key.begin(), key.size(), output_bits)
+   {
+   }
+
+
+BLAKE2b::BLAKE2b(const uint8_t key[], size_t key_length, size_t output_bits) :
    m_output_bits(output_bits),
    m_buffer(BLAKE2B_BLOCKBYTES),
    m_bufpos(0),
-   m_H(BLAKE2B_IVU64COUNT)
+   m_H(BLAKE2B_IVU64COUNT),
+   m_key_size(0)
    {
-   if(output_bits == 0 || output_bits > 512 || output_bits % 8 != 0)
+
+   if (output_bits == 0 || output_bits > 512 || output_bits % 8 != 0)
       {
-      throw Invalid_Argument("Bad output bits size for BLAKE2b");
+       throw Invalid_Argument("Bad output bits size for BLAKE2b");
+      }
+
+   if(key_length > 0)
+      {
+      if (key_length > BLAKE2B_BLOCKBYTES)
+         {
+         throw Invalid_Argument("Bad key length for BLAKE2b");
+         }
+
+      key_schedule(key, key_length);
       }
 
    state_init();
@@ -48,10 +71,20 @@ BLAKE2b::BLAKE2b(size_t output_bits) :
 void BLAKE2b::state_init()
    {
    copy_mem(m_H.data(), blake2b_IV, BLAKE2B_IVU64COUNT);
-   m_H[0] ^= 0x01010000 ^ static_cast<uint8_t>(output_length());
+   m_H[0] ^= (0x01010000 | (static_cast<uint8_t>(m_key_size) << 8) | static_cast<uint8_t>(output_length()));
    m_T[0] = m_T[1] = 0;
    m_F[0] = m_F[1] = 0;
-   m_bufpos = 0;
+
+   if(m_key_size == 0)
+      {
+      m_bufpos = 0;
+      }
+   else
+      {
+      BOTAN_ASSERT_NOMSG(m_padded_key_buffer.size() == m_buffer.size());
+      copy_mem(m_buffer.data(), m_padded_key_buffer.data(), m_padded_key_buffer.size());
+      m_bufpos = m_padded_key_buffer.size();
+      }
    }
 
 namespace {
@@ -181,6 +214,11 @@ void BLAKE2b::final_result(uint8_t output[])
    state_init();
    }
 
+Key_Length_Specification BLAKE2b::key_spec() const
+   {
+   return Key_Length_Specification(0, 64);
+   }
+
 std::string BLAKE2b::name() const
    {
    return "BLAKE2b(" + std::to_string(m_output_bits) + ")";
@@ -188,12 +226,29 @@ std::string BLAKE2b::name() const
 
 HashFunction* BLAKE2b::clone() const
    {
-   return new BLAKE2b(m_output_bits);
+   return new BLAKE2b(m_padded_key_buffer.data(), m_key_size, m_output_bits);
    }
 
 std::unique_ptr<HashFunction> BLAKE2b::copy_state() const
    {
    return std::unique_ptr<HashFunction>(new BLAKE2b(*this));
+   }
+
+void BLAKE2b::key_schedule(const uint8_t key[], size_t length)
+   {
+   BOTAN_ASSERT_NOMSG(length <= m_buffer.size());
+
+   m_key_size = length;
+   m_padded_key_buffer.resize(m_buffer.size());
+
+   if(m_padded_key_buffer.size() > length)
+      {
+      size_t padding = m_padded_key_buffer.size() - length;
+      clear_mem(m_padded_key_buffer.data() + length, padding);
+      }
+
+   copy_mem(m_padded_key_buffer.data(), key, length);
+   state_init();
    }
 
 void BLAKE2b::clear()

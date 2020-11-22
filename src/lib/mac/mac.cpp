@@ -40,6 +40,10 @@
   #include <botan/x919_mac.h>
 #endif
 
+#if defined(BOTAN_BLAKE2MAC_H_)
+  #include <botan/blake2bmac.h>
+#endif
+
 namespace Botan {
 
 std::unique_ptr<MessageAuthenticationCode>
@@ -47,6 +51,13 @@ MessageAuthenticationCode::create(const std::string& algo_spec,
                                   const std::string& provider)
    {
    const SCAN_Name req(algo_spec);
+
+#if defined(BOTAN_BLAKE2MAC_H_)
+   if (req.algo_name() == "Blake2b" || req.algo_name() == "BLAKE2b")
+   {
+       return std::unique_ptr<MessageAuthenticationCode>(new BLAKE2bMAC(req.arg_as_integer(0, 512)));
+   }
+#endif
 
 #if defined(BOTAN_HAS_GMAC)
    if(req.algo_name() == "GMAC" && req.arg_count() == 1)
