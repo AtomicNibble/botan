@@ -171,6 +171,9 @@ void MessageAuthenticationCode::start_msg(const uint8_t nonce[], size_t nonce_le
 */
 bool MessageAuthenticationCode::verify_mac(const uint8_t mac[], size_t length)
    {
+   if (length == 0)
+        return false;
+
    secure_vector<uint8_t> our_mac = final();
 
    if(our_mac.size() != length)
