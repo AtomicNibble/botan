@@ -40,7 +40,7 @@
   #include <botan/x919_mac.h>
 #endif
 
-#if defined(BOTAN_BLAKE2MAC_H_)
+#if defined(BOTAN_HAS_BLAKE2BMAC)
   #include <botan/blake2bmac.h>
 #endif
 

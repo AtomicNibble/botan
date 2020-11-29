@@ -9,6 +9,7 @@
 #define BOTAN_BLAKE2B_H_
 
 #include <botan/hash.h>
+#include <botan/sym_algo.h>
 #include <string>
 #include <memory>
 

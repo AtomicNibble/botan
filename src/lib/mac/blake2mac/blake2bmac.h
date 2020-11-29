@@ -9,9 +9,9 @@
 #define BOTAN_BLAKE2MAC_H_
 
 #include <botan/mac.h>
-#include <botan/hash/blake2b.h>
+#include <botan/blake2b.h>
 
-BOTAN_FUTURE_INTERNAL_HEADER(blake2mac.h)
+BOTAN_FUTURE_INTERNAL_HEADER(blake2bmac.h)
 
 
 namespace Botan {
