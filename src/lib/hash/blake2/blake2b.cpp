@@ -49,10 +49,9 @@ BLAKE2b::BLAKE2b(const uint8_t key[], size_t key_length, size_t output_bits) :
    m_H(BLAKE2B_IVU64COUNT),
    m_key_size(0)
    {
-
-   if (output_bits == 0 || output_bits > 512 || output_bits % 8 != 0)
+   if(output_bits == 0 || output_bits > 512 || output_bits % 8 != 0)
       {
-       throw Invalid_Argument("Bad output bits size for BLAKE2b");
+      throw Invalid_Argument("Bad output bits size for BLAKE2b");
       }
 
    if(key_length > 0)

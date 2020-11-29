@@ -53,7 +53,7 @@ MessageAuthenticationCode::create(const std::string& algo_spec,
    const SCAN_Name req(algo_spec);
 
 #if defined(BOTAN_HAS_BLAKE2BMAC)
-   if (req.algo_name() == "Blake2b" || req.algo_name() == "BLAKE2b")
+   if(req.algo_name() == "Blake2b" || req.algo_name() == "BLAKE2b")
    {
        return std::unique_ptr<MessageAuthenticationCode>(new BLAKE2bMAC(req.arg_as_integer(0, 512)));
    }
