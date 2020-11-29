@@ -14,7 +14,7 @@ namespace Botan {
 */
 void BLAKE2bMAC::clear()
    {
-   m_cipher.clear();
+   m_blake.clear();
    }
 
 /*
@@ -22,14 +22,14 @@ void BLAKE2bMAC::clear()
 */
 MessageAuthenticationCode* BLAKE2bMAC::clone() const
    {
-   return new BLAKE2bMAC(m_cipher.output_length() * 8);
+   return new BLAKE2bMAC(m_blake.output_length() * 8);
    }
 
 /*
 * BLAKE2bMAC Constructor
 */
 BLAKE2bMAC::BLAKE2bMAC(size_t output_bits) :
-       m_cipher(output_bits)
+       m_blake(output_bits)
    {
    }
 
