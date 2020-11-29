@@ -1,6 +1,7 @@
 /*
 * BLAKE2b MAC
 * (C) 1999-2007,2014 Jack Lloyd
+* (C) 2020           Tom Crowley
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
