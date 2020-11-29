@@ -255,7 +255,9 @@ void BLAKE2b::clear()
    {
    zeroise(m_H);
    zeroise(m_buffer);
+   zeroise(m_padded_key_buffer);
    m_bufpos = 0;
+   m_key_size = 0;
    state_init();
    }
 
