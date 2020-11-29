@@ -1,5 +1,5 @@
 <defines>
-BLAKE2BMAC -> 20202311
+BLAKE2BMAC -> 20201123
 </defines>
 
 <requires>
