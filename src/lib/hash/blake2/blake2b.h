@@ -17,6 +17,8 @@ BOTAN_FUTURE_INTERNAL_HEADER(blake2b.h)
 
 namespace Botan {
 
+class BLAKE2bMAC;
+
 /**
 * BLAKE2B
 */
@@ -40,7 +42,9 @@ class BOTAN_PUBLIC_API(2,0) BLAKE2b final : public HashFunction, public Symmetri
 
       std::unique_ptr<HashFunction> copy_state() const override;
 
-   public:
+   protected:
+      friend class BLAKE2bMAC;
+
       void key_schedule(const uint8_t key[], size_t length) override;
 
       void add_data(const uint8_t input[], size_t length) override;
