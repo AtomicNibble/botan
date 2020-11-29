@@ -225,7 +225,7 @@ std::string BLAKE2b::name() const
 
 HashFunction* BLAKE2b::clone() const
    {
-   return new BLAKE2b(m_padded_key_buffer.data(), m_key_size, m_output_bits);
+   return new BLAKE2b(m_output_bits);
    }
 
 std::unique_ptr<HashFunction> BLAKE2b::copy_state() const
