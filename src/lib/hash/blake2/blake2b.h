@@ -38,6 +38,7 @@ class BOTAN_PUBLIC_API(2,0) BLAKE2b final : public HashFunction, public Symmetri
 
       size_t hash_block_size() const override { return 128; }
       size_t output_length() const override { return m_output_bits / 8; }
+      size_t key_size() const { return m_key_size; }
 
       Key_Length_Specification key_spec() const override;
 

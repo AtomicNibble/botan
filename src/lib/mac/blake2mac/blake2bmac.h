@@ -40,11 +40,13 @@ public:
 
    void add_data(const uint8_t input[], size_t length) override
       {
+      verify_key_set(m_cipher.key_size() > 0);
       m_cipher.add_data(input, length);
       }
 
    void final_result(uint8_t out[]) override
       {
+      verify_key_set(m_cipher.key_size() > 0);
       m_cipher.final_result(out);
       }
 
