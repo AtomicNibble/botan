@@ -27,14 +27,6 @@ class BOTAN_PUBLIC_API(2,0) BLAKE2b final : public HashFunction, public Symmetri
       * @param output_bits the output size of BLAKE2b in bits
       */
       explicit BLAKE2b(size_t output_bits = 512);
-      BLAKE2b(const SymmetricKey& key, size_t output_bits = 512);
-      BLAKE2b(const uint8_t key[], size_t key_length, size_t output_bits = 512);
-
-      template<typename Alloc>
-      BLAKE2b(const std::vector<uint8_t, Alloc>& key, size_t output_bits = 512) :
-          BLAKE2b(key.data(), key.size(), output_bits)
-      {
-      }
 
       size_t hash_block_size() const override { return 128; }
       size_t output_length() const override { return m_output_bits / 8; }

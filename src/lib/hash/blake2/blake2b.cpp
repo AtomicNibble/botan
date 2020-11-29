@@ -32,17 +32,6 @@ const uint64_t blake2b_IV[BLAKE2B_IVU64COUNT] = {
 }
 
 BLAKE2b::BLAKE2b(size_t output_bits) :
-   BLAKE2b(nullptr, 0, output_bits)
-   {
-   }
-
-BLAKE2b::BLAKE2b(const SymmetricKey& key, size_t output_bits) :
-   BLAKE2b(key.begin(), key.size(), output_bits)
-   {
-   }
-
-
-BLAKE2b::BLAKE2b(const uint8_t key[], size_t key_length, size_t output_bits) :
    m_output_bits(output_bits),
    m_buffer(BLAKE2B_BLOCKBYTES),
    m_bufpos(0),
@@ -52,16 +41,6 @@ BLAKE2b::BLAKE2b(const uint8_t key[], size_t key_length, size_t output_bits) :
    if(output_bits == 0 || output_bits > 512 || output_bits % 8 != 0)
       {
       throw Invalid_Argument("Bad output bits size for BLAKE2b");
-      }
-
-   if(key_length > 0)
-      {
-      if (key_length > BLAKE2B_BLOCKBYTES)
-         {
-         throw Invalid_Argument("Bad key length for BLAKE2b");
-         }
-
-      key_schedule(key, key_length);
       }
 
    state_init();
