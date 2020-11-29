@@ -126,7 +126,7 @@ class Message_Auth_Tests final : public Text_Based_Test
                {
                std::vector<uint8_t> buf(128);
                mac->update(buf.data(), buf.size());
-               result.test_failure("Was able to MAC without a key being set");
+               result.test_failure("Was able to MAC without a key being set (after clear)");
                }
             catch(Botan::Invalid_State&)
                {
@@ -137,7 +137,7 @@ class Message_Auth_Tests final : public Text_Based_Test
                {
                std::vector<uint8_t> buf(mac->output_length());
                mac->final(buf.data());
-               result.test_failure("Was able to MAC without a key being set");
+               result.test_failure("Was able to MAC without a key being set (after clear)");
                }
             catch(Botan::Invalid_State&)
                {
